@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Hexo</title>
+  <title>我是Jimmy呀</title>
   
+  <subtitle>挖到宝藏啦</subtitle>
+  <link href="https://jinjiel1994.github.io/atom.xml" rel="self"/>
   
-  <link href="http://example.com/atom.xml" rel="self"/>
-  
-  <link href="http://example.com/"/>
+  <link href="https://jinjiel1994.github.io/"/>
   <updated>2022-07-22T17:34:53.381Z</updated>
-  <id>http://example.com/</id>
+  <id>https://jinjiel1994.github.io/</id>
   
   <author>
-    <name>John Doe</name>
+    <name>Jim Lee</name>
     
   </author>
   
@@ -18,8 +18,8 @@
   
   <entry>
     <title>第一篇随笔</title>
-    <link href="http://example.com/2022/07/23/%E7%AC%AC%E4%B8%80%E7%AF%87%E9%9A%8F%E7%AC%94/"/>
-    <id>http://example.com/2022/07/23/%E7%AC%AC%E4%B8%80%E7%AF%87%E9%9A%8F%E7%AC%94/</id>
+    <link href="https://jinjiel1994.github.io/2022/07/23/%E7%AC%AC%E4%B8%80%E7%AF%87%E9%9A%8F%E7%AC%94/"/>
+    <id>https://jinjiel1994.github.io/2022/07/23/%E7%AC%AC%E4%B8%80%E7%AF%87%E9%9A%8F%E7%AC%94/</id>
     <published>2022-07-22T17:27:04.000Z</published>
     <updated>2022-07-22T17:34:53.381Z</updated>
     
@@ -37,14 +37,14 @@
     
     
     
-    <category term="test" scheme="http://example.com/tags/test/"/>
+    <category term="test" scheme="https://jinjiel1994.github.io/tags/test/"/>
     
   </entry>
   
   <entry>
     <title>Hello World</title>
-    <link href="http://example.com/2022/07/23/hello-world/"/>
-    <id>http://example.com/2022/07/23/hello-world/</id>
+    <link href="https://jinjiel1994.github.io/2022/07/23/hello-world/"/>
+    <id>https://jinjiel1994.github.io/2022/07/23/hello-world/</id>
     <published>2022-07-22T17:05:09.891Z</published>
     <updated>2022-07-22T17:05:09.891Z</updated>
     
