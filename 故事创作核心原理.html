@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>故事创作的核心原理：结构、人物与事件的统一</title>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        dark: {
+                            100: '#1e293b',
+                            200: '#0f172a',
+                            300: '#020617',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: 0 },
+                            '100%': { opacity: 1 },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .section-fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .section-fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .dark .card-hover:hover {
+            box-shadow: 0 10px 25px -5px rgba(255, 255, 255, 0.05), 0 10px 10px -5px rgba(255, 255, 255, 0.02);
+        }
+        
+        .button-hover {
+            transition: all 0.2s ease;
+        }
+        
+        .button-hover:hover {
+            transform: scale(1.05);
+        }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .dark ::-webkit-scrollbar-thumb {
+            background-color: #4b5563;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #94a3b8;
+        }
+        
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background-color: #6b7280;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-dark-200 dark:text-gray-100 font-sans transition-colors duration-300">
+    <!-- 导航栏 -->
+    <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-dark-100/80 border-b border-gray-200 dark:border-gray-800 transition-all duration-300">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-book-open text-primary-600 dark:text-primary-400 text-2xl"></i>
+                <h1 class="text-lg md:text-xl font-bold truncate">故事创作核心原理</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-dark-300 button-hover">
+                    <i class="fas fa-moon hidden dark:inline-block text-yellow-200"></i>
+                    <i class="fas fa-sun inline-block dark:hidden text-yellow-500"></i>
+                </button>
+                <a href="#author" class="hidden md:flex items-center space-x-2 px-4 py-2 rounded-full bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-700 dark:hover:bg-primary-800 button-hover transition duration-300">
+                    <i class="fas fa-user"></i>
+                    <span>关于作者</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 目录侧边栏 - 仅在大屏幕显示 -->
+    <div class="hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 z-40 w-64 bg-white dark:bg-dark-100 rounded-xl shadow-lg p-4 opacity-90 hover:opacity-100 transition-all duration-300">
+        <h3 class="text-lg font-bold mb-4 text-primary-700 dark:text-primary-400 border-b pb-2 border-gray-200 dark:border-gray-700">目录</h3>
+        <ul class="space-y-3 text-sm">
+            <li><a href="#intro" class="block hover:text-primary-600 dark:hover:text-primary-400 transition-colors">导言</a></li>
+            <li><a href="#section1" class="block hover:text-primary-600 dark:hover:text-primary-400 transition-colors">一、故事的基本元素</a></li>
+            <li><a href="#section2" class="block hover:text-primary-600 dark:hover:text-primary-400 transition-colors">二、"结构即是人物，人物即是结构"</a></li>
+            <li><a href="#section3" class="block hover:text-primary-600 dark:hover:text-primary-400 transition-colors">三、实践应用</a></li>
+            <li><a href="#section4" class="block hover:text-primary-600 dark:hover:text-primary-400 transition-colors">四、案例分析</a></li>
+            <li><a href="#section5" class="block hover:text-primary-600 dark:hover:text-primary-400 transition-colors">五、结语：故事的本质</a></li>
+            <li><a href="#author" class="block hover:text-primary-600 dark:hover:text-primary-400 transition-colors">关于作者</a></li>
+        </ul>
+    </div>
+
+    <!-- 回到顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 z-50 bg-primary-600 text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 button-hover">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- 主要内容区 -->
+    <main class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- 标题区域 -->
+        <header id="intro" class="my-12 text-center section-fade-in">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-primary-800 dark:text-primary-300">故事创作的核心原理</h1>
+            <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8">结构、人物与事件的统一</p>
+            <div class="w-20 h-1 bg-primary-500 mx-auto"></div>
+        </header>
+
+        <!-- 第一部分：故事的基本元素 -->
+        <section id="section1" class="mb-16 section-fade-in">
+            <h2 class="text-2xl md:text-3xl font-bold mb-8 text-primary-700 dark:text-primary-400 border-b pb-2 border-gray-200 dark:border-gray-700">
+                <i class="fas fa-cubes mr-3"></i>一、故事的基本元素
+            </h2>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- 故事事件的本质 -->
+                <div class="bg-white dark:bg-dark-100 rounded-xl shadow-md p-6 card-hover">
+                    <div class="mb-4 flex items-center">
+                        <i class="fas fa-bolt text-amber-500 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">故事事件的本质</h3>
+                    </div>
+                    <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>事件即变化</strong>：从一种状态到另一种状态的转变</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>有意义的变化</strong>：必须发生在人物身上，而非仅是环境变化</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>价值转变</strong>：通过人类经验中的二元价值（生/死、爱/恨、希望/绝望等）来表达</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>冲突驱动</strong>：真正的故事事件必须通过冲突来完成，而非偶然发生</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 结构的定义与作用 -->
+                <div class="bg-white dark:bg-dark-100 rounded-xl shadow-md p-6 card-hover">
+                    <div class="mb-4 flex items-center">
+                        <i class="fas fa-sitemap text-emerald-500 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">结构的定义与作用</h3>
+                    </div>
+                    <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>结构是故事的骨架</strong>：决定事件顺序、起伏变化、转折点和因果关系</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>常见结构模式</strong>：三幕结构、英雄旅程、五幕结构等</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>结构的功能</strong>：组织内容，创造节奏，引导观众/读者情感体验</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 人物的核心要素 -->
+                <div class="bg-white dark:bg-dark-100 rounded-xl shadow-md p-6 card-hover">
+                    <div class="mb-4 flex items-center">
+                        <i class="fas fa-user-circle text-purple-500 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">人物的核心要素</h3>
+                    </div>
+                    <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>欲望与需求</strong>：人物想要什么（表层欲望）和真正需要什么（深层需求）</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>价值观与信念</strong>：人物的行为准则和世界观</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>弱点与缺陷</strong>：人物的不完美之处，也是成长的空间</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>内在矛盾</strong>：人物内心的冲突和两难处境</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第二部分："结构即是人物，人物即是结构"的深层含义 -->
+        <section id="section2" class="mb-16 section-fade-in">
+            <h2 class="text-2xl md:text-3xl font-bold mb-8 text-primary-700 dark:text-primary-400 border-b pb-2 border-gray-200 dark:border-gray-700">
+                <i class="fas fa-equals mr-3"></i>二、"结构即是人物，人物即是结构"的深层含义
+            </h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 结构如何塑造人物 -->
+                <div class="bg-white dark:bg-dark-100 rounded-xl shadow-md p-6 card-hover">
+                    <div class="mb-4 flex items-center">
+                        <i class="fas fa-hammer text-blue-500 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">结构如何塑造人物</h3>
+                    </div>
+                    <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>结构创造的关键时刻揭示人物本质</strong>：压力和两难处境下，人物真实性格浮现</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>结构设计的冲突测试人物价值观</strong>：通过设计与人物核心价值相冲突的情境，展示人物的本质</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>结构中的转折点促进人物成长</strong>：人物在故事的关键节点面临选择，从而推动其成长或堕落</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 人物如何决定结构 -->
+                <div class="bg-white dark:bg-dark-100 rounded-xl shadow-md p-6 card-hover">
+                    <div class="mb-4 flex items-center">
+                        <i class="fas fa-chess text-red-500 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">人物如何决定结构</h3>
+                    </div>
+                    <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>人物的选择推动故事发展</strong>：基于性格、欲望和信念做出的选择创造故事的转折点</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>人物的缺陷创造冲突</strong>：内在弱点和外在目标的矛盾产生故事的张力</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>人物的成长需求塑造故事弧</strong>：人物需要学习的课程决定了故事的整体走向</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 二者的有机统一 -->
+                <div class="bg-white dark:bg-dark-100 rounded-xl shadow-md p-6 card-hover md:col-span-2 lg:col-span-1">
+                    <div class="mb-4 flex items-center">
+                        <i class="fas fa-sync-alt text-green-500 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">二者的有机统一</h3>
+                    </div>
+                    <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>相互定义</strong>：人物通过结构展现，结构因人物而有意义</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>循环关系</strong>：人物做出选择→推动故事发展→创造新情境→要求人物再次选择</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>不可分割</strong>：试图分离处理人物和结构会导致故事不连贯或人物行为不合理</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 关系图解 -->
+            <div class="mt-10 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-dark-100 dark:to-dark-100 rounded-xl shadow-md section-fade-in">
+                <h3 class="text-xl font-semibold mb-4 text-center text-primary-700 dark:text-primary-400">结构与人物的关系图解</h3>
+                <div class="flex flex-col md:flex-row justify-center items-center gap-4 text-center">
+                    <div class="bg-white dark:bg-dark-200 p-4 rounded-xl shadow-md flex-1 max-w-xs">
+                        <i class="fas fa-user-alt text-4xl text-purple-500 mb-2"></i>
+                        <h4 class="font-semibold mb-2">人物</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">性格、欲望、信念和缺陷</p>
+                    </div>
+                    
+                    <div class="md:w-32 w-full flex md:flex-col justify-center items-center py-2">
+                        <i class="fas fa-arrow-right md:hidden text-primary-600 text-xl"></i>
+                        <i class="fas fa-arrow-down hidden md:block text-primary-600 text-xl"></i>
+                        <span class="mx-2 md:my-2 text-sm text-primary-600">产生</span>
+                        <i class="fas fa-arrow-left md:hidden text-primary-600 text-xl"></i>
+                        <i class="fas fa-arrow-up hidden md:block text-primary-600 text-xl"></i>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-dark-200 p-4 rounded-xl shadow-md flex-1 max-w-xs">
+                        <i class="fas fa-sitemap text-4xl text-green-500 mb-2"></i>
+                        <h4 class="font-semibold mb-2">结构</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">事件、转折点、冲突和解决</p>
+                    </div>
+                </div>
+                <p class="text-center mt-6 text-gray-600 dark:text-gray-300 text-sm italic">
+                    "理解了'结构即是人物，人物即是结构'这一原则，就抓住了故事创作的灵魂。"
+                </p>
+            </div>
+        </section>
+
+        <!-- 第三部分：实践应用 -->
+        <section id="section3" class="mb-16 section-fade-in">
+            <h2 class="text-2xl md:text-3xl font-bold mb-8 text-primary-700 dark:text-primary-400 border-b pb-2 border-gray-200 dark:border-gray-700">
+                <i class="fas fa-tools mr-3"></i>三、实践应用
+            </h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 创作故事的方法论 -->
+                <div class="bg-white dark:bg-dark-100 rounded-xl shadow-md p-6 card-hover">
+                    <div class="mb-4 flex items-center">
+                        <i class="fas fa-map text-yellow-600 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">创作故事的方法论</h3>
+                    </div>
+                    <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>先深入了解人物</strong>：明确其欲望、恐惧、价值观和弱点</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>设计能揭示人物本质的情境</strong>：创造测试人物核心价值的冲突</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>确保结构转折源于人物选择</strong>：避免"为了剧情需要"的不合理行为</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>使用价值变化检验故事事件</strong>：确保每个关键事件都带来价值状态的转变</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 常见创作陷阱及规避 -->
+                <div class="bg-white dark:bg-dark-100 rounded-xl shadow-md p-6 card-hover">
+                    <div class="mb-4 flex items-center">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">常见创作陷阱及规避</h3>
+                    </div>
+                    <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>空洞的情节</strong>：事件连接但缺乏价值变化和人物成长</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>不一致的人物</strong>：为推动剧情而违背已建立的人物性格</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>无意义的冲突</strong>：冲突存在但不测试人物核心价值</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>依赖巧合</strong>：过度使用偶然事件而非人物选择推动故事</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- 从生活中汲取创作灵感 -->
+                <div class="bg-white dark:bg-dark-100 rounded-xl shadow-md p-6 card-hover">
+                    <div class="mb-4 flex items-center">
+                        <i class="fas fa-lightbulb text-amber-400 text-2xl mr-3"></i>
+                        <h3 class="text-xl font-semibold">从生活中汲取创作灵感</h3>
+                    </div>
+                    <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>观察真实人物在压力下的行为</strong>：了解人性在极端情况下的表现</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>分析个人经历中的价值转变</strong>：识别生活中的故事价值变化</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                            <span><strong>寻找日常冲突背后的深层矛盾</strong>：发掘表面争执下的价值冲突</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 实践步骤时间线 -->
+            <div class="mt-10 p-6 bg-white dark:bg-dark-100 rounded-xl shadow-md section-fade-in">
+                <h3 class="text-xl font-semibold mb-6 text-center text-primary-700 dark:text-primary-400">故事创作实践步骤</h3>
+                <div class="relative">
+                    <!-- 时间线 -->
+                    <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-primary-200 dark:bg-primary-900 transform -translate-x-1/2"></div>
+                    
+                    <!-- 步骤1 -->
+                    <div class="relative md:flex items-center mb-8">
+                        <div class="hidden md:block w-1/2 pr-8 text-right">
+                            <h4 class="font-semibold text-lg text-primary-600 dark:text-primary-400">1. 人物设定</h4>
+                            <p class="text-gray-600 dark:text-gray-400">深入探索人物的欲望、动机、恐惧和价值观</p>
+                        </div>
+                        <div class="absolute left-1/2 w-8 h-8 bg-primary-500 rounded-full transform -translate-x-1/2 flex items-center justify-center hidden md:flex">
+                            <span class="text-white font-bold">1</span>
+                        </div>
+                        <div class="md:hidden mb-2">
+                            <span class="inline-block w-8 h-8 bg-primary-500 rounded-full text-white font-bold flex items-center justify-center">1</span>
+                            <h4 class="font-semibold text-lg text-primary-600 dark:text-primary-400 inline-block ml-2">人物设定</h4>
+                        </div>
+                        <div class="md:w-1/2 md:pl-8 md:mt-0 mt-2 md:hidden">
+                            <p class="text-gray-600 dark:text-gray-400">深入探索人物的欲望、动机、恐惧和价值观</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤2 -->
+                    <div class="relative md:flex items-center mb-8">
+                        <div class="md:w-1/2 pl-8 hidden md:block">
+                            <h4 class="font-semibold text-lg text-primary-600 dark:text-primary-400">2. 核心冲突设计</h4>
+                            <p class="text-gray-600 dark:text-gray-400">创造能够测试人物核心价值的冲突情境</p>
+                        </div>
+                        <div class="absolute left-1/2 w-8 h-8 bg-primary-500 rounded-full transform -translate-x-1/2 flex items-center justify-center hidden md:flex">
+                            <span class="text-white font-bold">2</span>
+                        </div>
+                        <div class="md:hidden mb-2">
+                            <span class="inline-block w-8 h-8 bg-primary-500 rounded-full text-white font-bold flex items-center justify-center">2</span>
+                            <h4 class="font-semibold text-lg text-primary-600 dark:text-primary-400 inline-block ml-2">核心冲突设计</h4>
+                        </div>
+                        <div class="md:hidden mt-2">
+                            <p class="text-gray-600 dark:text-gray-400">创造能够测试人物核心价值的冲突情境</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤3 -->
+                    <div class="relative md:flex items-center mb-8">
+                        <div class="hidden md:block w-1/2 pr-8 text-right">
+                            <h4 class="font-semibold text-lg text-primary-600 dark:text-primary-400">3. 结构框架搭建</h4>
+                            <p class="text-gray-600 dark:text-gray-400">基于人物选择设计转折点和故事事件</p>
+                        </div>
+                        <div class="absolute left-1/2 w-8 h-8 bg-primary-500 rounded-full transform -translate-x-1/2 flex items-center justify-center hidden md:flex">
+                            <span class="text-white font-bold">3</span>
+                        </div>
+                        <div class="md:hidden mb-2">
+                            <span class="inline-block w-8 h-8 bg-primary-500 rounded-full text-white font-bold flex items-center justify-center">3</span>
+                            <h4 class="font-semibold text-lg text-primary-600 dark:text-primary-400 inline-block ml-2">结构框架搭建</h4>
+                        </div>
+                        <div class="md:w-1/2 md:pl-8 md:mt-0 mt-2 md:hidden">
+                            <p class="text-gray-600 dark:text-gray-400">基于人物选择设计转折点和故事事件</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤4 -->
+                    <div class="relative md:flex items-center">
+                        <div class="md:w-1/2 pl-8 hidden md:block">
+                            <h4 class="font-semibold text-lg text-primary-600 dark:text-primary-400">4. 价值变化检验</h4>
+                            <p class="text-gray-600 dark:text-gray-400">确保每个关键事件都带来人物内外价值状态的有意义转变</p>
+                        </div>
+                        <div class="absolute left-1/2 w-8 h-8 bg-primary-500 rounded-full transform -translate-x-1/2 flex items-center justify-center hidden md:flex">
+                            <span class="text-white font-bold">4</span>
+                        </div>
+                        <div class="md:hidden mb-2">
+                            <span class="inline-block w-8 h-8 bg-primary-500 rounded-full text-white font-bold flex items-center justify-center">4</span>
+                            <h4 class="font-semibold text-lg text-primary-600 dark:text-primary-400 inline-block ml-2">价值变化检验</h4>
+                        </div>
+                        <div class="md:hidden mt-2">
+                            <p class="text-gray-600 dark:text-gray-400">确保每个关键事件都带来人物内外价值状态的有意义转变</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第四部分：案例分析 -->
+        <section id="section4" class="mb-16 section-fade-in">
+            <h2 class="text-2xl md:text-3xl font-bold mb-8 text-primary-700 dark:text-primary-400 border-b pb-2 border-gray-200 dark:border-gray-700">
+                <i class="fas fa-film mr-3"></i>四、案例分析
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- 《教父》案例 -->
+                <div class="bg-white dark:bg-dark-100 rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="h-40 bg-gradient-to-r from-gray-700 to-gray-900 flex items-center justify-center">
+                        <i class="fas fa-crown text-6xl text-amber-300"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">《教父》中的结构与人物统一</h3>
+                        <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                            <li class="flex items-start">
+                                <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                                <span><strong>迈克尔的人物弧</strong>：从拒绝家族事业到成为新教父</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                                <span><strong>关键结构点</strong>：父亲被枪击（第一转折）、迈克尔杀死警长（中点）、接管家族（高潮）</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                                <span><strong>价值转变</strong>：忠诚/背叛、家庭/个人、道德/权力等价值的复杂变化</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="mt-6 bg-gray-50 dark:bg-dark-200 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600 dark:text-gray-400 italic">
+                                "迈克尔·科莱昂的角色发展展示了完美的结构与人物统一——每个转折点都源于他的性格和内心矛盾，同时也重塑了他的性格。"
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 《星球大战》案例 -->
+                <div class="bg-white dark:bg-dark-100 rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="h-40 bg-gradient-to-r from-purple-900 to-indigo-900 flex items-center justify-center">
+                        <i class="fas fa-space-shuttle text-6xl text-blue-300 transform rotate-90"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">《星球大战》中的人物驱动结构</h3>
+                        <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                            <li class="flex items-start">
+                                <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                                <span><strong>卢克的性格特点</strong>（渴望冒险、冲动自信、相信善良）直接决定了故事的主要转折点</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                                <span><strong>每个结构转折点</strong>都源于卢克基于其性格做出的选择</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle-notch mt-1 text-xs text-primary-500 mr-2"></i>
+                                <span><strong>价值冲突</strong>：个人/集体、善/恶、希望/绝望等价值在故事中的转变</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="mt-6 bg-gray-50 dark:bg-dark-200 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600 dark:text-gray-400 italic">
+                                "卢克·天行者的英雄之旅是人物驱动结构的经典范例——他的内心冲突和成长需求塑造了整个故事的骨架。"
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 互动式分析工具 -->
+            <div class="mt-10 p-6 bg-white dark:bg-dark-100 rounded-xl shadow-md">
+                <h3 class="text-xl font-semibold mb-4 text-center text-primary-700 dark:text-primary-400">故事分析对比表</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="bg-gray-100 dark:bg-dark-200">
+                                <th class="p-3 text-left">分析维度</th>
+                                <th class="p-3 text-left">《教父》</th>
+                                <th class="p-3 text-left">《星球大战》</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <td class="p-3 font-medium">主人公价值观</td>
+                                <td class="p-3">家族忠诚vs个人理想</td>
+                                <td class="p-3">责任感vs冒险渴望</td>
+                            </tr>
+                            <tr class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-dark-200">
+                                <td class="p-3 font-medium">关键冲突</td>
+                                <td class="p-3">维护家族vs坚守道德底线</td>
+                                <td class="p-3">命运使命vs个人自由</td>
+                            </tr>
+                            <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <td class="p-3 font-medium">转折点动机</td>
+                                <td class="p-3">保护家人</td>
+                                <td class="p-3">探索真相</td>
+                            </tr>
+                            <tr class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-dark-200">
+                                <td class="p-3 font-medium">人物最终变化</td>
+                                <td class="p-3">理想主义者→现实主义者</td>
+                                <td class="p-3">普通人→英雄</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第五部分：结语 -->
+        <section id="section5" class="mb-16 section-fade-in">
+            <h2 class="text-2xl md:text-3xl font-bold mb-8 text-primary-700 dark:text-primary-400 border-b pb-2 border-gray-200 dark:border-gray-700">
+                <i class="fas fa-feather-alt mr-3"></i>五、结语：故事的本质
+            </h2>
+            
+            <div class="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-dark-100 dark:to-dark-100 p-8 rounded-xl shadow-md">
+                <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+                    真正引人入胜的故事不仅仅是事件的串联，而是通过精心设计的结构，展现人物在面对冲突时做出的选择，从而带来有意义的价值变化。当结构、人物和事件三者有机统一时，故事就能既出人意料又在情理之中，既有表面的娱乐性又有深层的意义，从而引发观众/读者的共鸣和思考。
+                </p>
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    正如麦基所言，故事的艺术本质上是"向世界表达价值观念的艺术"。通过理解结构与人物的辩证关系，以及故事事件的本质，创作者能够讲述那些既能娱乐又能启迪的故事——那些能够在飞速前进的时间飞船中，为我们提供观察和理解人生意义的窗口。
+                </p>
+                
+                <div class="mt-8 flex justify-center">
+                    <div class="inline-block p-5 rounded-full bg-white dark:bg-dark-200 shadow-lg">
+                        <i class="fas fa-quote-right text-4xl text-primary-500"></i>
+                    </div>
+                </div>
+                <p class="text-center mt-4 text-lg font-semibold text-primary-700 dark:text-primary-400">
+                    结构、人物与事件的统一，是优秀故事创作的核心
+                </p>
+            </div>
+        </section>
+        
+        <!-- 作者信息 -->
+        <section id="author" class="my-16 section-fade-in">
+            <h2 class="text-2xl font-bold mb-8 text-primary-700 dark:text-primary-400 border-b pb-2 border-gray-200 dark:border-gray-700">
+                <i class="fas fa-user-circle mr-3"></i>关于作者
+            </h2>
+            
+            <div class="flex flex-col md:flex-row items-center bg-white dark:bg-dark-100 rounded-xl shadow-md overflow-hidden">
+                <div class="w-full md:w-2/5 bg-gradient-to-r from-primary-500 to-blue-600 py-12 px-6 flex flex-col items-center justify-center text-white">
+                    <div class="w-32 h-32 rounded-full bg-white p-1 mb-4">
+                        <div class="w-full h-full rounded-full bg-gradient-to-r from-gray-100 to-gray-300 flex items-center justify-center">
+                            <i class="fas fa-user text-5xl text-gray-700"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-1">Jim</h3>
+                    <p class="text-blue-100 mb-4">故事创作分析师</p>
+                    <div class="flex space-x-4">
+                        <a href="https://twitter.com/jimwriter" target="_blank" class="hover:text-blue-200 transition-colors">
+                            <i class="fab fa-twitter text-2xl"></i>
+                        </a>
+                        <a href="https://linkedin.com/in/jimwriter" target="_blank" class="hover:text-blue-200 transition-colors">
+                            <i class="fab fa-linkedin text-2xl"></i>
+                        </a>
+                        <a href="https://instagram.com/jimwriter" target="_blank" class="hover:text-blue-200 transition-colors">
+                            <i class="fab fa-instagram text-2xl"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="w-full md:w-3/5 p-8">
+                    <h4 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">我的写作理念</h4>
+                    <p class="text-gray-600 dark:text-gray-400 mb-6">
+                        作为一名故事创作分析师，我致力于探索叙事艺术的深层原理，帮助创作者讲述更有力量和共鸣的故事。我相信，真正优秀的故事能够超越娱乐，触动人心，启发思考，甚至改变生活。
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-gray-100 dark:bg-dark-200 rounded-full text-sm text-gray-700 dark:text-gray-300">故事分析</span>
+                        <span class="px-3 py-1 bg-gray-100 dark:bg-dark-200 rounded-full text-sm text-gray-700 dark:text-gray-300">剧本创作</span>
+                        <span class="px-3 py-1 bg-gray-100 dark:bg-dark-200 rounded-full text-sm text-gray-700 dark:text-gray-300">角色发展</span>
+                        <span class="px-3 py-1 bg-gray-100 dark:bg-dark-200 rounded-full text-sm text-gray-700 dark:text-gray-300">叙事结构</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-100 dark:bg-dark-100 py-8 border-t border-gray-200 dark:border-gray-800">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <i class="fas fa-book-open text-primary-600 dark:text-primary-400 text-xl mr-2"></i>
+                    <span class="text-gray-700 dark:text-gray-300 font-semibold">故事创作核心原理</span>
+                </div>
+                <div class="text-gray-500 dark:text-gray-400 text-sm">
+                    © 2024 Jim. 保留所有权利。
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 深色模式切换
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        
+        // 检查系统偏好
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            html.classList.add('dark');
+        }
+        
+        // 切换主题
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+        });
+        
+        // 淡入动画
+        const fadeElements = document.querySelectorAll('.section-fade-in');
+        
+        const fadeInObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    fadeInObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        fadeElements.forEach(element => {
+            fadeInObserver.observe(element);
+        });
+        
+        // 回到顶部按钮
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html> 
